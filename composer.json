@@ -1,0 +1,8 @@
+{
+  "name": "barwenock/simplified-ui-components",
+  "autoload": {
+    "psr-4": {
+      "Barwenock\\": "framework/"
+    }
+  }
+}

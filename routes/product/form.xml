@@ -1,0 +1,14 @@
+<form>
+    <fieldset name="general">
+        <field name="name" />
+        <field name="price">
+            <argument name="data">
+                <item name="precision">4</item>
+            </argument>
+        </field>
+        <field name="description" template="form/textarea" />
+    </fieldset>
+    <fieldset name="additional">
+        <field name="image" template="form/image" />
+    </fieldset>
+</form>
