@@ -1,0 +1,5 @@
+<form>
+    <fieldset name="general">
+        <text name="name" />
+    </fieldset>
+</form>

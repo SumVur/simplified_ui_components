@@ -25,6 +25,14 @@ class Component implements ComponentInterface
     }
 
     /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->data['name'];
+    }
+
+    /**
      * @return array
      */
     public function getData(): array

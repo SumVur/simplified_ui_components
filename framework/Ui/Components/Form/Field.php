@@ -2,8 +2,8 @@
 
 namespace Barwenock\Ui\Components\Form;
 
-use Barwenock\Ui\Component;
 use Barwenock\Ui\ComponentInterface;
+use Barwenock\Ui\Component;
 
 /**
  * @api

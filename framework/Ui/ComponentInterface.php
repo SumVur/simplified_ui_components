@@ -11,6 +11,11 @@ interface ComponentInterface
     public const COMPONENT_CODE = 'component';
 
     /**
+     * @return string
+     */
+    public function getName(): string;
+
+    /**
      * @return array
      */
     public function getData(): array;
