@@ -5,7 +5,6 @@ namespace Barwenock\Routes;
 class FrontController
 {
     /**
-     * @param array $server
      * @return string|null
      */
     public function dispatch(): ?string
