@@ -45,9 +45,21 @@ class Reader
         $processed = [];
         /** @var \SimpleXMLElement $child */
         foreach ($simpleXMLElement as $child) {
+            if ($child->getName() === 'argument') {
+                continue;
+            }
+
             $children = $this->toArray($child);
-            $attributes = $child->attributes();
+            $attributes = $this->castAttributesToArray($child->attributes());
             $attributes[self::ELEMENT_TYPE] = $child->getName();
+
+            //merge attributes and arguments together
+            if (count($child->xpath('argument'))) {
+                $attributes = array_replace_recursive(
+                    $attributes,
+                    $this->caseArgumentsToArray($child->xpath('argument')[0])
+                );
+            }
 
             if (!isset($attributes[self::KEY_ATTRIBUTE])) {
                 throw new \Exception('Key attribute should be specified for all the nodes');
@@ -58,6 +70,36 @@ class Reader
         }
 
         return $processed;
+    }
+
+    /**
+     * @param \SimpleXMLElement $attributes
+     * @return array
+     */
+    private function castAttributesToArray(\SimpleXMLElement $attributes): array
+    {
+        $attributes = (array) $attributes;
+        return $attributes['@attributes'];
+    }
+
+    /**
+     * @param \SimpleXMLElement $simpleXMLElement
+     * @return array
+     */
+    private function caseArgumentsToArray(\SimpleXMLElement $simpleXMLElement): array
+    {
+        $flat = [];
+        //In arguments node, there can be only 2 nodes: argument and item
+        /** @var \SimpleXMLElement $item */
+        foreach ($simpleXMLElement as $item) {
+            if ($item->count()) {
+                $flat[(string) $item['name']] = $this->caseArgumentsToArray($item);
+            } else {
+                $flat[(string) $item['name']] = (string) $item;
+            }
+        }
+
+        return $flat;
     }
 
     /**

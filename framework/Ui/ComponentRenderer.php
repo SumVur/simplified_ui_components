@@ -21,7 +21,7 @@ class ComponentRenderer
             $children = $this->__render($componentData[Reader::CHILDREN]);
             unset($componentData[Reader::CHILDREN]);
             $data[$component->getName()] = $componentData;
-            $data['children'] = $children;
+            $data[$component->getName()]['children'] = $children;
         }
 
         return $data;
@@ -33,6 +33,6 @@ class ComponentRenderer
      */
     public function render(array $componentData): string
     {
-        return json_encode($this->__render($componentData));
+        return '<script type="simplified/ui-components">' . json_encode($this->__render($componentData)) . '</script>';
     }
 }
