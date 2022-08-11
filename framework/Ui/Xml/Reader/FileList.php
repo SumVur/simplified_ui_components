@@ -17,6 +17,7 @@ class FileList
         );
 
         foreach ($directoryIterator as $file) {
+            if ($file->isDot()) continue;
             if ($file->getBasename() === $componentName . '.xml') {
                 $fileList[] = $file->getPath() . DIRECTORY_SEPARATOR . $file->getBasename();
             }
