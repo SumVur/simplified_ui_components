@@ -1,7 +1,7 @@
 requirejs.config({
   baseUrl: 'framework/Ui/js/lib',
   paths: {
-    assets: '../assets',
+    assets: '../../../../assets',
     core: '../core',
   }
 });
