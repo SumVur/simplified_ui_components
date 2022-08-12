@@ -5,7 +5,7 @@ define(['core/processUiNode'], function (processUiNode) {
 
       document.querySelectorAll(key).forEach((script) => {
         let uiData = JSON.parse(script.innerHTML);
-        processUiNode.process(uiData);
+        processUiNode.process(uiData,"all_ui_components");
       });
     }
   }
