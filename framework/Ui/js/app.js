@@ -6,7 +6,8 @@ requirejs.config({
   }
 });
 
-requirejs(['core/index'],
-  function (index) {
+requirejs(['core/index', 'ko', "core/simplifiedTemplateEngine"],
+  function (index, ko, engine) {
+    ko.setTemplateEngine(engine);
     index.start();
   });
