@@ -32,7 +32,6 @@ class ComponentFactory
     public function create(array $componentData): array
     {
         $components = [];
-        //[['general' => ['text' => ['name' => [], 'children' => [...]]]]]
         foreach ($componentData as $componentName => $childComponent) {
             $elementType = $childComponent[Reader::ELEMENT_TYPE];
             $componentClass = ElementTypes::getComponentByType($elementType);

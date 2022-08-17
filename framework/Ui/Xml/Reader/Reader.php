@@ -13,9 +13,30 @@ class Reader
      */
     private FileList $fileList;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->fileList = new FileList();
+    }
+
+    /**
+     * @param string $componentName
+     * @return array
+     * @throws \Exception
+     */
+    public function read(string $componentName): array {
+        $result = [];
+        foreach ($this->fileList->getFiles($componentName) as $file) {
+            $content = file_get_contents($file);
+            $dom = $this->getXmlDomDocument($content, $componentName);
+
+            $nodeName = $dom->getName();
+            $result[$nodeName][self::ELEMENT_TYPE] = $nodeName;
+            $result[$nodeName][self::KEY_ATTRIBUTE] = $nodeName;
+            $children = $result[$nodeName][self::CHILDREN] ?? [];
+
+            $result[$nodeName][self::CHILDREN] = array_replace_recursive((array)$children, $this->childrenToArray($dom));
+        }
+
+        return $result;
     }
 
     /**
@@ -24,8 +45,7 @@ class Reader
      * @return \SimpleXMLElement
      * @throws \Exception
      */
-    private function getXmlDomDocument(string $content, string $typeCode): \SimpleXMLElement
-    {
+    private function getXmlDomDocument(string $content, string $typeCode): \SimpleXMLElement {
         try {
             $dom = new \SimpleXMLElement($content);
         } catch (\Exception $e) {
@@ -40,8 +60,7 @@ class Reader
      * @return array
      * @throws \Exception
      */
-    private function toArray(\SimpleXMLElement $simpleXMLElement)
-    {
+    private function childrenToArray(\SimpleXMLElement $simpleXMLElement): array {
         $processed = [];
         /** @var \SimpleXMLElement $child */
         foreach ($simpleXMLElement as $child) {
@@ -49,7 +68,7 @@ class Reader
                 continue;
             }
 
-            $children = $this->toArray($child);
+            $children = $this->childrenToArray($child);
             $attributes = $this->castAttributesToArray($child->attributes());
             $attributes[self::ELEMENT_TYPE] = $child->getName();
 
@@ -65,8 +84,8 @@ class Reader
                 throw new \Exception('Key attribute should be specified for all the nodes');
             }
 
-            $processed[(string) $attributes[self::KEY_ATTRIBUTE]] = $attributes;
-            $processed[(string) $attributes[self::KEY_ATTRIBUTE]][self::CHILDREN] = $children;
+            $processed[(string)$attributes[self::KEY_ATTRIBUTE]] = $attributes;
+            $processed[(string)$attributes[self::KEY_ATTRIBUTE]][self::CHILDREN] = $children;
         }
 
         return $processed;
@@ -76,9 +95,8 @@ class Reader
      * @param \SimpleXMLElement $attributes
      * @return array
      */
-    private function castAttributesToArray(\SimpleXMLElement $attributes): array
-    {
-        $attributes = (array) $attributes;
+    private function castAttributesToArray(\SimpleXMLElement $attributes): array {
+        $attributes = (array)$attributes;
         return $attributes['@attributes'];
     }
 
@@ -86,36 +104,18 @@ class Reader
      * @param \SimpleXMLElement $simpleXMLElement
      * @return array
      */
-    private function caseArgumentsToArray(\SimpleXMLElement $simpleXMLElement): array
-    {
+    private function caseArgumentsToArray(\SimpleXMLElement $simpleXMLElement): array {
         $flat = [];
         //In arguments node, there can be only 2 nodes: argument and item
         /** @var \SimpleXMLElement $item */
         foreach ($simpleXMLElement as $item) {
             if ($item->count()) {
-                $flat[(string) $item['name']] = $this->caseArgumentsToArray($item);
+                $flat[(string)$item['name']] = $this->caseArgumentsToArray($item);
             } else {
-                $flat[(string) $item['name']] = (string) $item;
+                $flat[(string)$item['name']] = (string)$item;
             }
         }
 
         return $flat;
-    }
-
-    /**
-     * @param string $componentName
-     * @return array
-     * @throws \Exception
-     */
-    public function read(string $componentName): array
-    {
-        $result = [];
-        foreach ($this->fileList->getFiles($componentName) as $file) {
-            $content = file_get_contents($file);
-            $dom = $this->getXmlDomDocument($content, $componentName);
-            $result = array_replace_recursive($result, $this->toArray($dom));
-        }
-
-        return $result;
     }
 }

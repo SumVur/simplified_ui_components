@@ -4,6 +4,7 @@ namespace Barwenock\Ui;
 
 use Barwenock\Ui\Components\Form\Field;
 use Barwenock\Ui\Components\Form\Fieldset;
+use Barwenock\Ui\Components\Form\Form;
 use Barwenock\Ui\Components\Form\Image;
 use Barwenock\Ui\Components\Form\Price;
 use Barwenock\Ui\Components\Form\Text;
@@ -17,6 +18,7 @@ class ElementTypes
     private static array $componentTypes = [
         'text' => Text::class,
         'textarea' => Textarea::class,
+        'form' => Form::class,
         'field' => Field::class,
         'image' => Image::class,
         'price' => Price::class,
