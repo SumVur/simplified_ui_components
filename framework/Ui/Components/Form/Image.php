@@ -9,6 +9,6 @@ class Image extends Field
 {
     protected array $data = [
         self::TEMPLATE_CODE => 'form/image',
-        self::COMPONENT_CODE => 'element'
+        self::COMPONENT_CODE => 'form/component/element'
     ];
 }
