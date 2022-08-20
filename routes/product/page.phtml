@@ -1,9 +1,9 @@
-<script data-main="<?= CORE_JS_DIR?>app.js" src="<?= CORE_JS_DIR?>r.js"></script>
+<script data-main="<?= CORE_JS_DIR ?>app.js" src="<?= CORE_JS_DIR ?>r.js"></script>
 
 <?php
 /** @var \Barwenock\Ui\UiComponentBlock $uiComponentBlock */
 ?>
-<div id="all_ui_components">
-
+<div id="root_ui_component">
+    <!-- ko template: getTemplate() --><!-- /ko -->
 </div>
 <?= $uiComponentBlock('product_form'); ?>
