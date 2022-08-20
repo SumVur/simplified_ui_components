@@ -1,11 +1,35 @@
-define(['core/template/loader', 'core/template/convector'], function (TemplateLoader, TemplateConvector) {
-  return {
-    constructNode: async function (node) {
-      require([`assets/${node['component']}`]);
+define(['underscore', 'core/componentManager'], function (_, componentManager) {
+    return {
+      /**
+       * construct node & load component
+       * @param node
+       * @returns {`${string}_${string}`}
+       */
+      constructNode: function (node) {
+        if (!node.hasOwnProperty('component')) {
+          throw new Error('Component is not defined for the given name ' + node.name);
+        }
 
-      let template = await TemplateLoader.load(node['template']);
+        if (!node.hasOwnProperty('template')) {
+          throw new Error('template is not defined for the given name ' + node.name);
+        }
 
-      return TemplateConvector.convect(template);
+        let children = [];
+        if (node.hasOwnProperty('children')) {
+          for (let childKey in node['children']) {
+            let childNode = node['children'][childKey];
+            let childComponent = this.constructNode(childNode);
+
+            children.push(childComponent);
+          }
+        }
+
+        let component = `assets/${node.component}`;
+        let componentId = componentManager.getId(node.name);
+        componentManager.load(componentId, component, children, node.template)
+
+        return componentId;
+      }
     }
   }
-})
+)

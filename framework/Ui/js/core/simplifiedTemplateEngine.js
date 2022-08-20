@@ -19,7 +19,7 @@ define(['underscore', 'ko'], function(_, ko) {
             return source;
         }
 
-        fetch('/' + template + '.html')
+        fetch('assets/' + template + '.html')
             .then(response => response.text())
             .then(response => {
                 sourceRegistry[template] = source;
